@@ -27,7 +27,6 @@ func Register(c *fiber.Ctx) error {
 		fmt.Println("Unable to parse body")
 	}
 
-	//Check if password is less than 8 characters
 	if len(data["password"].(string)) < 8 {
 		c.Status(400)
 		return c.JSON(fiber.Map{
@@ -42,7 +41,6 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
-	//Check if email already exist in the database
 	database.DB.Where("email=?", strings.TrimSpace(data["email"].(string))).First(&userData)
 	if userData.Id != 0 {
 		c.Status(400)
@@ -91,7 +89,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 	token, err := util.GenerateJwt(strconv.Itoa(int(user.Id)))
-	if err != nil {
+	if err != nil  {
 		c.Status(fiber.StatusInternalServerError)
 		return nil
 	}

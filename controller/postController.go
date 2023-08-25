@@ -46,7 +46,7 @@ func AllPost(c *fiber.Ctx) error {
 		"meta": fiber.Map{
 			"total":     total,
 			"page":      page,
-			"last page": math.Ceil(float64(int(total) / limit)),
+			"last page": int(math.Ceil(float64(total) / float64(limit))),
 		},
 	})
 }
@@ -80,7 +80,9 @@ func UniquePost(c *fiber.Ctx) error {
 	var blog []model.Blog
 	database.DB.Model(&blog).Where("user_id=?", id).Preload("User").Find(&blog)
 
-	return c.JSON(blog)
+	return c.JSON(fiber.Map{
+		"data":blog,
+	})
 }
 
 func DeletePost(c *fiber.Ctx) error {
